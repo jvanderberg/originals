@@ -6,7 +6,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "0.1"
+    MARKETING_VERSION: "0.1.1"
     CURRENT_PROJECT_VERSION: "1"
 targets:
   Originals:
@@ -34,3 +34,5 @@ targets:
           # Distributed outside the App Store: Developer ID, with a secure timestamp for notarization.
           CODE_SIGN_IDENTITY: "Developer ID Application"
           OTHER_CODE_SIGN_FLAGS: "--timestamp"
+          # Xcode otherwise adds the get-task-allow debugging entitlement, which notarization rejects.
+          CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO

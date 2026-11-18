@@ -31,11 +31,27 @@ xcodebuild -project Originals.xcodeproj -scheme Originals -configuration Release
 APP="build/release/Build/Products/Release/Originals.app"
 
 codesign --verify --deep --strict --verbose=2 "$APP"
-codesign -d --entitlements - "$APP" | grep -q photos-library
+ENTITLEMENTS="$(codesign -d --entitlements - --xml "$APP" 2>/dev/null)"
+grep -q photos-library <<<"$ENTITLEMENTS" || { echo "Missing the Photos entitlement" >&2; exit 1; }
+if grep -q get-task-allow <<<"$ENTITLEMENTS"; then echo "Has get-task-allow, which notarization rejects" >&2; exit 1; fi
+
+# Submits to Apple's notary service and waits; on anything but Accepted, prints Apple's log and fails.
+notarize() {
+  local result id status
+  result="$(xcrun notarytool submit "$1" "${NOTARY_AUTH[@]}" --wait --output-format json)"
+  echo "$result"
+  id="$(plutil -extract id raw - <<<"$result")"
+  status="$(plutil -extract status raw - <<<"$result")"
+  if [[ "$status" != "Accepted" ]]; then
+    echo "Notarization of $1 came back $status. Apple's log:" >&2
+    xcrun notarytool log "$id" "${NOTARY_AUTH[@]}" >&2 || true
+    exit 1
+  fi
+}
 
 echo "Notarizing the app…"
 ditto -c -k --keepParent "$APP" "$WORK/Originals.zip"
-xcrun notarytool submit "$WORK/Originals.zip" "${NOTARY_AUTH[@]}" --wait
+notarize "$WORK/Originals.zip"
 xcrun stapler staple "$APP"
 xcrun stapler validate "$APP"
 
@@ -50,7 +66,7 @@ IDENTITY="$(security find-identity -v -p codesigning | awk -F'"' '/Developer ID 
 codesign --sign "$IDENTITY" --timestamp "$DMG"
 
 echo "Notarizing the DMG…"
-xcrun notarytool submit "$DMG" "${NOTARY_AUTH[@]}" --wait
+notarize "$DMG"
 xcrun stapler staple "$DMG"
 xcrun stapler validate "$DMG"
 spctl --assess --type open --context context:primary-signature --verbose=2 "$DMG"
