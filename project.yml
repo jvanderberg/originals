@@ -1,0 +1,36 @@
+name: Originals
+options:
+  bundleIdPrefix: local.originals
+  deploymentTarget:
+    macOS: "14.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.1"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  Originals:
+    type: application
+    platform: macOS
+    sources: [Originals]
+    info:
+      path: Originals/Info.plist
+      properties:
+        CFBundleDisplayName: Originals
+        LSApplicationCategoryType: public.app-category.photography
+        NSPhotoLibraryUsageDescription: Originals reads your Photos library so you can browse it and export unmodified originals.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: local.originals.Originals
+        CODE_SIGN_STYLE: Manual
+        DEVELOPMENT_TEAM: W83295YM5V
+        CODE_SIGN_ENTITLEMENTS: Originals/Originals.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_HARDENED_RUNTIME: YES
+      configs:
+        Debug:
+          CODE_SIGN_IDENTITY: "Apple Development"
+        Release:
+          # Distributed outside the App Store: Developer ID, with a secure timestamp for notarization.
+          CODE_SIGN_IDENTITY: "Developer ID Application"
+          OTHER_CODE_SIGN_FLAGS: "--timestamp"

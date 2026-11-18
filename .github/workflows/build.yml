@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Select Xcode 16.4
+        run: |
+          if [ -d /Applications/Xcode_16.4.app ]; then sudo xcode-select -s /Applications/Xcode_16.4.app; fi
+          xcodebuild -version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # Unsigned: this checks that the app builds. Signed, notarized builds come from release.yml.
+      - name: Build (Release, unsigned)
+        run: |
+          xcodegen generate --quiet
+          xcodebuild -project Originals.xcodeproj -scheme Originals -configuration Release \
+            -derivedDataPath build -destination 'generic/platform=macOS' \
+            CODE_SIGNING_ALLOWED=NO build
+          lipo -archs build/Build/Products/Release/Originals.app/Contents/MacOS/Originals
