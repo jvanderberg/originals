@@ -16,7 +16,7 @@ targets:
     info:
       path: Originals/Info.plist
       properties:
-        CFBundleDisplayName: Originals
+        CFBundleDisplayName: $(APP_DISPLAY_NAME)
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSApplicationCategoryType: public.app-category.photography
@@ -24,6 +24,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: local.originals.Originals
+        APP_DISPLAY_NAME: Originals
         CODE_SIGN_STYLE: Manual
         DEVELOPMENT_TEAM: W83295YM5V
         CODE_SIGN_ENTITLEMENTS: Originals/Originals.entitlements
@@ -32,6 +33,10 @@ targets:
       configs:
         Debug:
           CODE_SIGN_IDENTITY: "Apple Development"
+          # Its own identity, so a development build never shares (and flips) the Photos permission,
+          # Keychain sign-in or settings of an installed release.
+          PRODUCT_BUNDLE_IDENTIFIER: local.originals.Originals.debug
+          APP_DISPLAY_NAME: Originals Dev
         Release:
           # Distributed outside the App Store: Developer ID, with a secure timestamp for notarization.
           CODE_SIGN_IDENTITY: "Developer ID Application"

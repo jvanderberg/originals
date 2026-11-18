@@ -115,7 +115,8 @@ final class ICloudThumbnails {
     private init() {
         memory.totalCostLimit = 300 << 20
         let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        directory = caches.appendingPathComponent("local.originals.Originals/iCloudPreviews", isDirectory: true)
+        directory = caches.appendingPathComponent("\(Bundle.main.bundleIdentifier ?? "local.originals.Originals")/iCloudPreviews",
+                                                  isDirectory: true)
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let directory = directory
         Task.detached(priority: .background) { Self.trim(directory, to: Self.diskLimit) }

@@ -12,11 +12,14 @@ xcodebuild -project Originals.xcodeproj -scheme Originals -configuration "$CONFI
 APP="build/Build/Products/$CONFIG/Originals.app"
 echo "Built $APP"
 if [[ "${1:-}" == "--run" ]]; then
-  # Ask a running copy to quit normally (it asks first if exports are running), and wait for it.
-  if pgrep -x Originals >/dev/null; then
-    osascript -e 'tell application id "local.originals.Originals" to quit' || true
-    for _ in $(seq 1 100); do pgrep -x Originals >/dev/null || break; sleep 0.1; done
-    if pgrep -x Originals >/dev/null; then echo "Originals is still running; quit it, then open $APP"; exit 1; fi
+  # Ask the running copy of this build to quit normally (it asks first if exports are running), and
+  # wait for it. Only this build's copy: an installed release has a different bundle ID.
+  BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Contents/Info.plist")"
+  EXECUTABLE="$PWD/$APP/Contents/MacOS/Originals"
+  if pgrep -f "^$EXECUTABLE" >/dev/null; then
+    osascript -e "tell application id \"$BUNDLE_ID\" to quit" || true
+    for _ in $(seq 1 100); do pgrep -f "^$EXECUTABLE" >/dev/null || break; sleep 0.1; done
+    if pgrep -f "^$EXECUTABLE" >/dev/null; then echo "$APP is still running; quit it, then open it again"; exit 1; fi
   fi
   open "$APP"
 fi

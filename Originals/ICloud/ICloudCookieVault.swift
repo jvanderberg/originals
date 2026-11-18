@@ -7,7 +7,7 @@ import Security
 /// current launch it reports no cookies at all, and it drops session-only cookies on quit. icloudpd
 /// solves the same problem by saving the whole cookie jar, session cookies included, to its own file.
 enum ICloudCookieVault {
-    private static let service = "local.originals.Originals.icloud-session"
+    private static let service = "\(Bundle.main.bundleIdentifier ?? "local.originals.Originals").icloud-session"
     private static let account = "cookies"
 
     /// One cookie, with just the fields iCloud's cookies use.
