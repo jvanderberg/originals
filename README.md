@@ -54,3 +54,7 @@ Pushing a tag like `v0.2.0` runs `.github/workflows/release.yml`. It builds a un
 | `NOTARY_TEAM_ID` | The Developer Team ID |
 
 `scripts/build-release.sh` does the same locally, using a `notarytool` keychain profile (`NOTARY_PROFILE=name scripts/build-release.sh`).
+
+## License
+
+MIT. See [LICENSE](LICENSE).
