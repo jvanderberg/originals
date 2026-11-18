@@ -6,7 +6,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "0.1.1"
+    MARKETING_VERSION: "0.1.2"
     CURRENT_PROJECT_VERSION: "1"
 targets:
   Originals:
@@ -17,6 +17,8 @@ targets:
       path: Originals/Info.plist
       properties:
         CFBundleDisplayName: Originals
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSApplicationCategoryType: public.app-category.photography
         NSPhotoLibraryUsageDescription: Originals reads your Photos library so you can browse it and export unmodified originals.
     settings:
