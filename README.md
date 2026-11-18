@@ -6,6 +6,8 @@ Exporting from Photos is painful when your library lives in iCloud. Photos has t
 
 Originals downloads the same files straight from iCloud at the full speed of your connection (about 33 MB/s on a 280 Mbps line in testing, versus 0.7 MB/s), and shows every file's progress, speed and time left.
 
+**[Download the latest release](https://github.com/jvanderberg/originals/releases/latest)**
+
 ## Features
 
 - Browse your library, albums and smart albums in a fast thumbnail grid. Select like Finder (click, ⌘-click, ⇧-click, drag, ⌘A).
@@ -16,7 +18,7 @@ Originals downloads the same files straight from iCloud at the full speed of you
 
 ## Install
 
-Download the latest `Originals-*.dmg` from [Releases](../../releases), open it, and drag Originals to Applications. It is signed and notarized, so it opens normally.
+Download `Originals-*.dmg` from the [latest release](https://github.com/jvanderberg/originals/releases/latest), open it, and drag Originals to Applications. It is signed and notarized, so it opens normally.
 
 Requires macOS 14 or later. On first launch it asks for access to your Photos library.
 
